@@ -4,8 +4,30 @@ function createStore(){
   // Listens to changes on the State 
   //  update the State
   let state;
+  let listeners = []
+
   getState=()=> state;
-  return {
-    getState
+
+  subscribe=(listener)=> {
+    listeners.push(listener)
+    return() =>{
+      listerners = listerners.filter((l) => l === listener)
+    }
   }
+
+  return {
+    getState,
+    subscribe
+  }
+
 }
+
+const store = createStore();
+
+store.subscribe(()=> {
+  console.log("The new State", store.getState);
+})
+
+store.subscribe(()=> {
+  console.log("The state changed");
+})
