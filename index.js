@@ -1,14 +1,10 @@
-function createStore () {
-  // The store should have four parts
-  // 1. The state
-  // 2. Get the state.
-  // 3. Listen to changes on the state.
-  // 4. Update the state
-
-  let state
-
-  const getState = () => state
-
+function createStore(){
+  // The Store should have four(4) parts
+  // Get State
+  // Listens to changes on the State 
+  //  update the State
+  let state;
+  getState=()=> state;
   return {
     getState
   }
