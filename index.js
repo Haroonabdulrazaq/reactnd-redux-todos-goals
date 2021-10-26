@@ -1,4 +1,4 @@
-function Reducer(state=[], action){
+function todo(state=[], action){
   if(action.type == 'ADD_TODO') {
     return state.concat([action.todo])
   }
