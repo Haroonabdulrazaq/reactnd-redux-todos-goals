@@ -1,13 +1,20 @@
+const ADD_TODO = "ADD_TODO";
+const REMOVE_TODO = "REMOVE_TODO";
+const REMOVE_TODO = "TOGGLE_TODO";
+const REMOVE_TODO = "ADD_GOAL";
+const REMOVE_TODO = "REMOVE_GOAL";
+
+
 // App Code
 
 function todos(state=[], action){
   switch (action.type) {
-    case "ADD_TODO":
+    case ADD_TODO:
       return state.concat([action.todo])
-    case "REMOVE_TODO":
+    case REMOVE_TODO:
       const newTodos = state.filter(todo => todo.id !== action.payload)
       return newTodos
-    case "TOGGLE_TODO":
+    case TOGGLE_TODO:
       return state.map(todo => todo.id !== action.payload? todo : 
         Object.assign({}, todo, {completed: !todo.completed }));
     default:
@@ -18,9 +25,9 @@ function todos(state=[], action){
 
   const goals =(state=[], action)=>{
     switch (action.type) {
-      case "ADD_GOAL":
+      case ADD_GOAL:
         return state.concat([action.goal])
-      case "REMOVE_GOAL":
+      case REMOVE_GOAL:
         return state.filter((goal) => goal.id !== action.payload)
     
       default:
