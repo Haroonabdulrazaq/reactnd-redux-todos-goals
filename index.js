@@ -18,6 +18,22 @@ function todo(state=[], action){
 
   return state
 }
+  // Goal Reducer
+
+  const goal =(state=[], action)=>{
+    switch (action.type) {
+      case "ADD_GOAL":
+        return state.concat([goal])
+      case "REMOVE_GOAL":
+        return state.filter((goal) => goal.id !== action.payload)
+    
+      default:
+        return state;
+    }
+  }
+
+
+
 // CreateStore function
 function createStore(todo){
   // The Store should have four(4) parts
