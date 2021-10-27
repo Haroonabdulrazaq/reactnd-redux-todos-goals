@@ -1,4 +1,14 @@
-function createStore(reducer){
+// App Code
+
+function todo(state=[], action){
+  if(action.type == 'ADD_TODO') {
+    return state.concat([action.todo])
+  }
+
+  return state
+}
+// CreateStore function
+function createStore(todo){
   // The Store should have four(4) parts
   // Get State
   // Listens to changes on the State 
@@ -11,13 +21,13 @@ function createStore(reducer){
   subscribe=(listener)=> {
     listeners.push(listener)
     return() =>{
-      listerners = listerners.filter((l) => l !== listener)
+      listeners = listeners.filter((l) => l !== listener)
     }
   }
 
   dispatch=(action)=>{
-    state = reducer(state, action )
-    listerners.forEach(listener => listener());
+    state = todo(state, action )
+    listeners.forEach(listener => listener());
   }
 
   return {
@@ -28,15 +38,18 @@ function createStore(reducer){
 
 }
 
-// App Code
+const store = createStore(todo);
 
-function todo(state=[], action){
-  if(action.type == 'ADD_TODO') {
-    return state.concat([action.todo])
+store.subscribe(()=>{
+  console.log("This is the new state:", store.getState());
+})
+
+store.dispatch({
+  type: "ADD_TODO",
+  todo: {
+    id: 0,
+    name: "Learn Redux",
+    completed: false,
   }
+})
 
-  return state
-}
-
-
-const store = createStore(todos);
