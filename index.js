@@ -1,6 +1,6 @@
 // App Code
 
-function todo(state=[], action){
+function todos(state=[], action){
   switch (action.type) {
     case "ADD_TODO":
       return state.concat([action.todo])
@@ -10,17 +10,13 @@ function todo(state=[], action){
     case "TOGGLE_TODO":
       return state.map(todo => todo.id !== action.payload? todo : 
         Object.assign({}, todo, {completed: !todo.completed }));
-      
-  
     default:
       return state;
   }
-
-  return state
 }
   // Goal Reducer
 
-  const goal =(state=[], action)=>{
+  const goals =(state=[], action)=>{
     switch (action.type) {
       case "ADD_GOAL":
         return state.concat([goal])
@@ -32,14 +28,16 @@ function todo(state=[], action){
     }
   }
 
-
+const app =(state={}, action)=>{
+  return {
+    todos: todos(state.todo, action),
+    goals: goal(state.goal, action),
+  }
+}
 
 // CreateStore function
-function createStore(todo){
-  // The Store should have four(4) parts
-  // Get State
-  // Listens to changes on the State 
-  //  update the State
+function createStore(reducer){
+
   let state;
   let listeners = []
 
@@ -53,7 +51,7 @@ function createStore(todo){
   }
 
   dispatch=(action)=>{
-    state = todo(state, action )
+    state = reducer(state, action )
     listeners.forEach(listener => listener());
   }
 
@@ -62,10 +60,10 @@ function createStore(todo){
     subscribe,
     dispatch,
   }
-
 }
 
-const store = createStore(todo);
+
+const store = createStore(app);
 
 store.subscribe(()=>{
   console.log("This is the new state:", store.getState());
@@ -82,8 +80,9 @@ store.dispatch({
 
 store.dispatch({
   type: "REMOVE_TODO",
- payload: 2
+  payload: 2
 })
+
 store.dispatch({
   type: "TOGGLE_TODO",
  payload: 2
