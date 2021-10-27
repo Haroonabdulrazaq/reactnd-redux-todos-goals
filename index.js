@@ -7,6 +7,10 @@ function todo(state=[], action){
     case "REMOVE_TODO":
       const newTodos = state.filter(todo => todo.id !== action.payload)
       return newTodos
+    case "TOGGLE_TODO":
+      return state.map(todo => todo.id !== action.payload? todo : 
+        Object.assign({}, todo, {completed: !todo.completed }));
+      
   
     default:
       return state;
@@ -62,6 +66,10 @@ store.dispatch({
 
 store.dispatch({
   type: "REMOVE_TODO",
+ payload: 2
+})
+store.dispatch({
+  type: "TOGGLE_TODO",
  payload: 2
 })
 
