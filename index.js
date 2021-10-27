@@ -19,7 +19,7 @@ function todos(state=[], action){
   const goals =(state=[], action)=>{
     switch (action.type) {
       case "ADD_GOAL":
-        return state.concat([goal])
+        return state.concat([action.goal])
       case "REMOVE_GOAL":
         return state.filter((goal) => goal.id !== action.payload)
     
@@ -30,8 +30,8 @@ function todos(state=[], action){
 
 const app =(state={}, action)=>{
   return {
-    todos: todos(state.todo, action),
-    goals: goal(state.goal, action),
+    todos: todos(state.todos, action),
+    goals: goals(state.goals, action),
   }
 }
 
@@ -79,7 +79,21 @@ store.dispatch({
 })
 
 store.dispatch({
+  type: "ADD_GOAL",
+  goal: {
+    id: 0,
+    name: "Become a developer",
+    Time: false,
+  }
+})
+
+store.dispatch({
   type: "REMOVE_TODO",
+  payload: 2
+})
+
+store.dispatch({
+  type: "REMOVE_GOAL",
   payload: 2
 })
 
