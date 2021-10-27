@@ -1,8 +1,15 @@
 // App Code
 
 function todo(state=[], action){
-  if(action.type == 'ADD_TODO') {
-    return state.concat([action.todo])
+  switch (action.type) {
+    case "ADD_TODO":
+      return state.concat([action.todo])
+    case "REMOVE_TODO":
+      const newTodos = state.filter(todo => todo.id !== action.payload)
+      return newTodos
+  
+    default:
+      return state;
   }
 
   return state
@@ -51,5 +58,10 @@ store.dispatch({
     name: "Learn Redux",
     completed: false,
   }
+})
+
+store.dispatch({
+  type: "REMOVE_TODO",
+ payload: 2
 })
 
