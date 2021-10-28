@@ -1,8 +1,41 @@
 const ADD_TODO = "ADD_TODO";
 const REMOVE_TODO = "REMOVE_TODO";
-const REMOVE_TODO = "TOGGLE_TODO";
-const REMOVE_TODO = "ADD_GOAL";
-const REMOVE_TODO = "REMOVE_GOAL";
+const TOGGLE_TODO= "TOGGLE_TODO";
+const ADD_GOAL= "ADD_GOAL";
+const REMOVE_GOAL = "REMOVE_GOAL";
+
+// Action Creators
+  const addTodoAction = (todo)=>{
+    return {
+     type: ADD_TODO,
+      todo
+    }
+  }
+  const removeTodoAction = (id)=>{
+    return {
+     type: REMOVE_TODO,
+      id
+    }
+  }
+  const toggleTodoAction = (id)=>{
+    return {
+     type: TOGGLE_TODO,
+      id
+    }
+  }
+  const addGoalAction = (goal)=>{
+    return {
+     type: ADD_GOAL,
+      goal
+    }
+  }
+  const removeGoalAction = (id)=>{
+    return {
+     type: REMOVE_GOAL,
+      id
+    }
+  }
+
 
 
 // App Code
@@ -15,8 +48,9 @@ function todos(state=[], action){
       const newTodos = state.filter(todo => todo.id !== action.payload)
       return newTodos
     case TOGGLE_TODO:
+      console.log("Toggling..")
       return state.map(todo => todo.id !== action.payload? todo : 
-        Object.assign({}, todo, {completed: !todo.completed }));
+        Object.assign({}, todo, true));
     default:
       return state;
   }
@@ -76,36 +110,19 @@ store.subscribe(()=>{
   console.log("This is the new state:", store.getState());
 })
 
-store.dispatch({
-  type: "ADD_TODO",
-  todo: {
-    id: 0,
-    name: "Learn Redux",
-    completed: false,
-  }
-})
+store.dispatch(addTodoAction({
+  id: 0,
+  name: "Learn Redux",
+  completed: false,
+}))
 
-store.dispatch({
-  type: "ADD_GOAL",
-  goal: {
-    id: 0,
-    name: "Become a developer",
-    Time: false,
-  }
-})
+store.dispatch(addGoalAction({
+  id: 0,
+  name: "Become a developer",
+  Time: 2021,
+}))
 
-store.dispatch({
-  type: "REMOVE_TODO",
-  payload: 2
-})
-
-store.dispatch({
-  type: "REMOVE_GOAL",
-  payload: 2
-})
-
-store.dispatch({
-  type: "TOGGLE_TODO",
- payload: 2
-})
+store.dispatch(removeTodoAction(0))
+store.dispatch(removeGoalAction(0))
+store.dispatch(toggleTodoAction(0))
 
