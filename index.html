@@ -70,12 +70,14 @@ function todos(state=[], action){
     case ADD_TODO:
       return state.concat([action.todo])
     case REMOVE_TODO:
-      const newTodos = state.filter(todo => todo.id !== action.payload)
+      const newTodos = state.filter(todo => todo.id !== action.id)
       return newTodos
     case TOGGLE_TODO:
       console.log("Toggling..")
-      return state.map(todo => todo.id !== action.payload? todo : 
-        Object.assign({}, todo, true));
+      console.log("Action ID..", action.id)
+      console.log("Todo ID..", state[0])
+      return state.map(todo => todo.id !== action.id? todo : 
+        Object.assign({}, todo, { completed: !todo.completed }));
     default:
       return state;
   }
@@ -87,7 +89,7 @@ function todos(state=[], action){
       case ADD_GOAL:
         return state.concat([action.goal])
       case REMOVE_GOAL:
-        return state.filter((goal) => goal.id !== action.payload)
+        return state.filter((goal) => goal.id !== action.id)
     
       default:
         return state;
@@ -141,6 +143,7 @@ function createStore(reducer){
 
    document.getElementById("todos").innerHTML= ""
    document.getElementById("goals").innerHTML= ""
+   console.log("All todos", todos);
    todos.forEach(addTodoToDOM)
    goals.forEach(addGoalToDOM)
   })
@@ -169,7 +172,7 @@ function createStore(reducer){
     }))
   }
 
-    const btn = document.getElementById('todoBtn')
+    document.getElementById('todoBtn')
       .addEventListener('click', addTodo)
 
     document.getElementById('goalBtn')
@@ -179,10 +182,11 @@ function createStore(reducer){
   const addTodoToDOM =(todo) => {
     const node = document.createElement("li");
     const text = document.createTextNode(todo.name);
-
-    if(!todo.completed) {
-      node.style.textDecoration = "line-through";
-    } 
+    node.style.textDecoration = todo.completed? "line-through" : "none";
+    node.addEventListener("click", ()=>{
+      console.log("In eventListener", todo.id);
+      store.dispatch(toggleTodoAction(todo.id))
+    })
     node.appendChild(text);
     document.getElementById('todos')
       .appendChild(node);
