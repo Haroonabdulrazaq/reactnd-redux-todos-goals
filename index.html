@@ -4,15 +4,28 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Udacity Todo Goals</title>
 </head>
 <body>
+  <div>
+    <h2>Todo List</h2>
+    <input type="text" id="todo" placeholder="Add Todo">
+    <button id="todoBtn">Add Todo</button>
+  </div>
+  <div>
+    <h2>Goals</h2>
+    <input type="text" id="goal"  placeholder="Add Goal">
+    <button id="goalBtn">Add Goal</button>
+  </div>
+ 
+
+  
   <script type="text/javaScript">
     const ADD_TODO = "ADD_TODO";
-const REMOVE_TODO = "REMOVE_TODO";
-const TOGGLE_TODO= "TOGGLE_TODO";
-const ADD_GOAL= "ADD_GOAL";
-const REMOVE_GOAL = "REMOVE_GOAL";
+    const REMOVE_TODO = "REMOVE_TODO";
+    const TOGGLE_TODO= "TOGGLE_TODO";
+    const ADD_GOAL= "ADD_GOAL";
+    const REMOVE_GOAL = "REMOVE_GOAL";
 
 // Action Creators
   const addTodoAction = (todo)=>{
@@ -113,10 +126,29 @@ function createStore(reducer){
   }
 }
 
+const store = createStore(app);
 
-  const store = createStore(app);
-  
-  
+store.subscribe(()=>{
+  console.log("This is the new state:", store.getState());
+})
+
+
+    store.dispatch(addTodoAction({
+    id: 0,
+    name: "Learn Redux",
+    completed: false,
+  }))
+
+  store.dispatch(addGoalAction({
+    id: 0,
+    name: "Become a developer",
+    Time: 2021,
+  }))
+
+  store.dispatch(removeTodoAction(0))
+  store.dispatch(removeGoalAction(0))
+  store.dispatch(toggleTodoAction(0))
+    
   </script>
 </body> 
 </html>
