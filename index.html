@@ -1,4 +1,14 @@
-const ADD_TODO = "ADD_TODO";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script type="text/javaScript">
+    const ADD_TODO = "ADD_TODO";
 const REMOVE_TODO = "REMOVE_TODO";
 const TOGGLE_TODO= "TOGGLE_TODO";
 const ADD_GOAL= "ADD_GOAL";
@@ -11,16 +21,16 @@ const REMOVE_GOAL = "REMOVE_GOAL";
       todo
     }
   }
-  const removeTodoAction = (payload)=>{
+  const removeTodoAction = (id)=>{
     return {
      type: REMOVE_TODO,
-     payload
+      id
     }
   }
-  const toggleTodoAction = (payload)=>{
+  const toggleTodoAction = (id)=>{
     return {
      type: TOGGLE_TODO,
-     payload
+      id
     }
   }
   const addGoalAction = (goal)=>{
@@ -29,10 +39,10 @@ const REMOVE_GOAL = "REMOVE_GOAL";
       goal
     }
   }
-  const removeGoalAction = (payload)=>{
+  const removeGoalAction = (id)=>{
     return {
      type: REMOVE_GOAL,
-     payload
+      id
     }
   }
 
@@ -104,25 +114,9 @@ function createStore(reducer){
 }
 
 
-const store = createStore(app);
-
-store.subscribe(()=>{
-  console.log("This is the new state:", store.getState());
-})
-
-store.dispatch(addTodoAction({
-  id: 0,
-  name: "Learn Redux",
-  completed: false,
-}))
-
-store.dispatch(addGoalAction({
-  id: 0,
-  name: "Become a developer",
-  Time: 2021,
-}))
-
-store.dispatch(removeTodoAction(0))
-store.dispatch(removeGoalAction(0))
-store.dispatch(toggleTodoAction(0))
-
+  const store = createStore(app);
+  
+  
+  </script>
+</body> 
+</html>
