@@ -5,6 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Udacity Todo Goals</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.min.js"></script>
 </head>
 <body>
   <div>
@@ -96,12 +97,13 @@ function todos(state=[], action){
     }
   }
 
-const app =(state={}, action)=>{
-  return {
-    todos: todos(state.todos, action),
-    goals: goals(state.goals, action),
-  }
-}
+  // CombineReducer
+// const app =(state={}, action)=>{
+//   return {
+//     todos: todos(state.todos, action),
+//     goals: goals(state.goals, action),
+//   }
+// }
 
   //Generate Id dynamically
     const generateId= ()=> {
@@ -109,34 +111,10 @@ const app =(state={}, action)=>{
     }
 
 
-// CreateStore function
-function createStore(reducer){
-
-  let state;
-  let listeners = []
-
-  getState=()=> state;
-
-  subscribe=(listener)=> {
-    listeners.push(listener)
-    return() =>{
-      listeners = listeners.filter((l) => l !== listener)
-    }
-  }
-
-  dispatch=(action)=>{
-    state = reducer(state, action )
-    listeners.forEach(listener => listener());
-  }
-
-  return {
-    getState,
-    subscribe,
-    dispatch,
-  }
-}
-
-  const store = createStore(app);
+  const store = Redux.createStore(Redux.combineReducers({
+    todos,
+    goals
+  }));
 
   store.subscribe(()=>{
    const {todos, goals} = store.getState();
@@ -178,14 +156,14 @@ function createStore(reducer){
     document.getElementById('goalBtn')
       .addEventListener('click', addGoal)
 
-      const createRemoveButton =(onClick)=>{
-        const removeBtn = document.createElement('button');
-        removeBtn.innerHTML = 'X';
-        
-        removeBtn.addEventListener('click', onClick);
+    const createRemoveButton =(onClick)=>{
+      const removeBtn = document.createElement('button');
+      removeBtn.innerHTML = 'X';
+      
+      removeBtn.addEventListener('click', onClick);
 
-        return removeBtn
-      }
+      return removeBtn
+    }
   
   const addTodoToDOM =(todo) => {
     const node = document.createElement("li");
