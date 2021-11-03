@@ -97,17 +97,24 @@ function todos(state=[], action){
     }
   }
 
-  // CombineReducer
-// const app =(state={}, action)=>{
-//   return {
-//     todos: todos(state.todos, action),
-//     goals: goals(state.goals, action),
-//   }
-// }
-
   //Generate Id dynamically
     const generateId= ()=> {
       return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
+    }
+
+    const checkAndDispatch=(store, action)=> {
+      console.log();
+      if( action.type === ADD_TODO && action.todo.name.toLowerCase().includes('bitcoin')){
+        alert("I include bitcoin") 
+        return
+      }
+
+      if( action.type === ADD_GOAL && action.goal.name.toLowerCase().includes('bitcoin')){
+        alert("This is a Bad Idea")
+        return 
+      }
+
+      return store.dispatch(action)
     }
 
 
@@ -132,7 +139,7 @@ function todos(state=[], action){
     const inputValue = input.value;
     input.value = "";
 
-    store.dispatch(addTodoAction({
+    checkAndDispatch(store, addTodoAction({
       id: generateId(),
       name: inputValue,
       completed: false,
@@ -144,7 +151,7 @@ function todos(state=[], action){
     const inputValue = input.value;
     input.value = "";
 
-    store.dispatch(addGoalAction({
+    checkAndDispatch(store, addGoalAction({
       id: generateId(),
       name: inputValue,
     }))
@@ -170,14 +177,14 @@ function todos(state=[], action){
     const text = document.createTextNode(todo.name);
 
     const removeBtn = createRemoveButton(()=>
-      store.dispatch(removeTodoAction(todo.id))
+      checkAndDispatch(store,removeTodoAction(todo.id))
     )
     node.appendChild(text);
     node.appendChild(removeBtn);
     node.style.textDecoration = todo.completed? "line-through" : "none";
     node.addEventListener("click", ()=>{
       console.log("In eventListener", todo.id);
-      store.dispatch(toggleTodoAction(todo.id))
+      checkAndDispatch(store,toggleTodoAction(todo.id))
     })
 
     document.getElementById('todos')
@@ -189,7 +196,7 @@ function todos(state=[], action){
     const text = document.createTextNode(goal.name);
     
     const removeBtn = createRemoveButton(()=>
-      store.dispatch(removeGoalAction(goal.id))
+      checkAndDispatch(store,removeGoalAction(goal.id))
     )
     node.appendChild(text);
     node.appendChild(removeBtn);
