@@ -12,22 +12,7 @@
   <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
 </head>
 <body>
-  <div>
-    <h2>Todo List</h2>
-    <input type="text" id="todo" placeholder="Add Todo">
-    <button id="todoBtn">Add Todo</button>
-    <ul id="todos"></ul>
-  </div>
-  <div>
-    <h2>Goals</h2>
-    <input type="text" id="goal"  placeholder="Add Goal">
-    <button id="goalBtn">Add Goal</button>
-    <ul id="goals"></ul>
-  </div>
-  <hr/>
   <div id="app"></div>
-
-  
   <script type="text/javaScript">
     const ADD_TODO = "ADD_TODO";
     const REMOVE_TODO = "REMOVE_TODO";
@@ -66,8 +51,6 @@
       id
     }
   }
-
-
 
 // App Code
 
@@ -141,78 +124,6 @@ function todos(state=[], action){
    todos.forEach(addTodoToDOM)
    goals.forEach(addGoalToDOM)
   })
-
-  const addTodo =()=>{
-
-    const input = document.getElementById('todo');
-    const inputValue = input.value;
-    input.value = "";
-
-    store.dispatch( addTodoAction({
-      id: generateId(),
-      name: inputValue,
-      completed: false,
-    }))
-  }
-
-  const addGoal =()=>{
-    const input = document.getElementById('goal');
-    const inputValue = input.value;
-    input.value = "";
-
-    store.dispatch( addGoalAction({
-      id: generateId(),
-      name: inputValue,
-    }))
-  }
-
-    document.getElementById('todoBtn')
-      .addEventListener('click', addTodo)
-
-    document.getElementById('goalBtn')
-      .addEventListener('click', addGoal)
-
-    const createRemoveButton =(onClick)=>{
-      const removeBtn = document.createElement('button');
-      removeBtn.innerHTML = 'X';
-      
-      removeBtn.addEventListener('click', onClick);
-
-      return removeBtn
-    }
-  
-  const addTodoToDOM =(todo) => {
-    const node = document.createElement("li");
-    const text = document.createTextNode(todo.name);
-
-    const removeBtn = createRemoveButton(()=>
-      store.dispatch(removeTodoAction(todo.id))
-    )
-    node.appendChild(text);
-    node.appendChild(removeBtn);
-    node.style.textDecoration = todo.completed? "line-through" : "none";
-    node.addEventListener("click", ()=>{
-      console.log("In eventListener", todo.id);
-      store.dispatch(toggleTodoAction(todo.id))
-    })
-
-    document.getElementById('todos')
-      .appendChild(node);
-  }
-
-  const addGoalToDOM =(goal) => {
-    const node = document.createElement("li");
-    const text = document.createTextNode(goal.name);
-    
-    const removeBtn = createRemoveButton(()=>
-      store.dispatch(removeGoalAction(goal.id))
-    )
-    node.appendChild(text);
-    node.appendChild(removeBtn);
-    document.getElementById('goals')
-      .appendChild(node)
-  }
-
   </script>
   <script type="text/babel">
     const List =(props)=> {
