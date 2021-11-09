@@ -20,6 +20,7 @@
     const TOGGLE_TODO= "TOGGLE_TODO";
     const ADD_GOAL= "ADD_GOAL";
     const REMOVE_GOAL = "REMOVE_GOAL";
+    const RECEIVE_DATA = "RECEIVE_DATA";
 
 // Action Creators
   const addTodoAction = (todo)=>{
@@ -53,6 +54,14 @@
     }
   }
 
+  const receiveDataAction=(todos, goals)=>{
+    return {
+      type: RECEIVE_DATA,
+      todos,
+      goals
+    }
+  }
+
 // App Code
 
 function todos(state=[], action){
@@ -65,6 +74,8 @@ function todos(state=[], action){
     case TOGGLE_TODO:
       return state.map(todo => todo.id !== action.id? todo : 
         Object.assign({}, todo, { completed: !todo.completed }));
+    case RECEIVE_DATA:
+      return action.todos
     default:
       return state;
   }
@@ -72,16 +83,29 @@ function todos(state=[], action){
   // Goal Reducer
 
   const goals =(state=[], action)=>{
+    console.log("Im the actor", action);
     switch (action.type) {
       case ADD_GOAL:
         return state.concat([action.goal])
       case REMOVE_GOAL:
         return state.filter((goal) => goal.id !== action.id)
-    
+      case RECEIVE_DATA:
+        return action.goals
       default:
         return state;
     }
   }
+
+// Loading Reducer
+const loading =(state= true, action)=>{
+  switch (action.type) {
+    case RECEIVE_DATA:
+      return false;
+    default:
+      return state;
+  }
+}
+
 
   //Generate Id dynamically
     const generateId= ()=> {
@@ -112,7 +136,7 @@ function todos(state=[], action){
     }
 
     // const middlewares =[checker, logger]
-      const rootReducer = Redux.combineReducers({todos,goals})
+      const rootReducer = Redux.combineReducers({todos,goals, loading})
 
   const store = Redux.createStore(rootReducer, Redux.applyMiddleware(checker, logger));
   </script>
@@ -192,11 +216,20 @@ function todos(state=[], action){
       componentDidMount() {
         const { store } = this.props;
         store.subscribe(()=> this.forceUpdate());
+        Promise.all([
+          API.fetchTodos(),
+          API.fetchGoals()
+        ]).then(([ todos, goals ]) => {
+          store.dispatch(receiveDataAction(todos, goals))
+        })
       }
 
       render() {
         const { store } = this.props;
-        const { todos, goals } = store.getState();
+        const { todos, goals, loading } = store.getState();
+        if(loading){
+          return <h3>Loading...</h3>
+        }
         return(
           <div>
             <Todos todos={todos} store={this.props.store} />  
