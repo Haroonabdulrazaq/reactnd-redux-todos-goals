@@ -147,7 +147,7 @@ const loading =(state= true, action)=>{
           {props.items.map((item)=> (
             <li key={item.id}><span onClick={()=> props.toggleTodo && props.toggleTodo(item.id)}
               style={{textDecoration:item.completed? 'line-through' : 'none'}}>{item.name}</span>
-              <button onClick={()=> props.removeItem(item.id)}>X</button>
+              <button onClick={()=> props.removeItem(item)}>X</button>
             </li>
           ))}
         </ul>
@@ -167,8 +167,13 @@ const loading =(state= true, action)=>{
         }))
       }
 
-      removeItem =(id)=>{
-        this.props.store.dispatch(removeTodoAction(id))
+      removeItem =(todo)=>{
+        this.props.store.dispatch(removeTodoAction(todo.id));
+        return API.deleteTodo(todo.id)
+          .catch(()=>{
+            this.props.store.dispatch(addTodoAction(todo))
+            return alert("An error Occured, Try again")
+          })
       }
       toggleTodo =(id)=>{
         this.props.store.dispatch(toggleTodoAction(id))
@@ -197,8 +202,14 @@ const loading =(state= true, action)=>{
         }))
       }
 
-      removeItem=(id) =>{
-        this.props.store.dispatch(removeGoalAction(id));
+      removeItem=(goal) =>{
+        this.props.store.dispatch(removeGoalAction(goal.id));
+
+        return API.deleteGoal(goal.id)
+          .catch(()=>{
+            this.props.store.dispatch(addGoalAction(goal))
+            return alert("An error Occured, Try again")
+          })
       }
       render(){
         return(
