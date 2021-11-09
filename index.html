@@ -215,15 +215,19 @@ function todos(state=[], action){
 
   </script>
   <script type="text/babel">
-    class List extends React.Component {
-      render(){
-        return(
-          <ul>
-            <li>LIST</li> 
-          </ul>
-        )
-      }
+    const List =(props)=> {
+      return(
+        <ul>
+          {props.items.map((item)=> (
+            <li key={item.id}><span onClick={()=> props.toggleTodo && props.toggleTodo(item.id)}
+              style={{textDecoration:item.completed? 'line-through' : 'none'}}>{item.name}</span>
+              <button onClick={()=> props.removeItem(item.id)}>X</button>
+            </li>
+          ))}
+        </ul>
+      )
     }
+
     class Todos extends React.Component {
       addItem=(e)=>{
         e.preventDefault();
@@ -232,9 +236,16 @@ function todos(state=[], action){
 
         this.props.store.dispatch(addTodoAction({
           name,
-          complete: false,
+          completed: false,
           id: generateId()
         }))
+      }
+
+      removeItem =(id)=>{
+        this.props.store.dispatch(removeTodoAction(id))
+      }
+      toggleTodo =(id)=>{
+        this.props.store.dispatch(toggleTodoAction(id))
       }
       render(){
         return(
@@ -242,27 +253,52 @@ function todos(state=[], action){
             <h2>Todos</h2>
             <input type="text" placeholder="Add Todo" ref={(input)=> this.input = input} />
             <button onClick={this.addItem}>Add todo</button>
-            <div><List /></div> 
+            <List toggleTodo={this.toggleTodo} removeItem={this.removeItem} items={this.props.todos} />
           </div>
         )
       }
     }
+
     class Goals extends React.Component {
+      addItem=(e)=>{
+        e.preventDefault();
+        const name = this.input.value;
+        this.input.value =''
+
+        this.props.store.dispatch(addGoalAction({
+          name,
+          id: generateId()
+        }))
+      }
+
+      removeItem=(id) =>{
+        this.props.store.dispatch(removeGoalAction(id));
+      }
       render(){
         return(
           <div>
             <h2>Goals</h2>
-            <div><List /></div> 
+            <input type="text" placeholder="Add Goal" ref={(input)=> this.input = input} />
+            <button onClick={this.addItem}>Add goal</button>
+            <List removeItem={this.removeItem} items ={this.props.goals}/> 
           </div>
         )
       }
     }
+
     class App extends React.Component {
+      componentDidMount() {
+        const { store } = this.props;
+        store.subscribe(()=> this.forceUpdate());
+      }
+
       render() {
+        const { store } = this.props;
+        const { todos, goals } = store.getState();
         return(
           <div>
-            <Todos store={this.props.store} />  
-            <Goals store={this.props.store} />  
+            <Todos todos={todos} store={this.props.store} />  
+            <Goals goals={goals} store={this.props.store} />  
           </div>
         );
       }
