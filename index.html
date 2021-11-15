@@ -62,6 +62,19 @@
       goals
     }
   }
+
+  const handleAddTodo =(name, cb)=> {
+    return (dispatch) => {
+      return API.saveTodo(name)
+          .then(todo => {
+            dispatch(addTodoAction(todo))
+            cb()
+          }).catch(err=> {
+            console.log(err);
+          })
+    }
+  }
+
   const handleDeleteTodo= (todo)=> {
       return (dispatch) => {
         dispatch(removeTodoAction(todo.id))
@@ -72,6 +85,17 @@
             alert('An error occurred. Try again.')
           })
       }
+  }
+
+  const handleToggleTodo = (id)=> {
+    return (dispatch) => {
+      dispatch(toggleTodoAction(id))
+      return API.saveTodoToggle(id)
+          .catch(()=>{
+            dispatch(toggleTodoAction(id));
+            return alert("Error Occured and refused to toggle")
+          })
+    }
   }
 
   function handleAddGoal(name, cb) {
@@ -86,6 +110,7 @@
           })
       }
   }
+
   function handleDeleteGoal(goal) {
     return (dispatch)=>{
      dispatch(removeGoalAction(goal.id));
@@ -98,6 +123,16 @@
     }
   }
 
+const handleInitialData =()=>{
+  return (dispatch) => {
+    return Promise.all([
+      API.fetchTodos(),
+      API.fetchGoals()
+    ]).then(([ todos, goals ]) => {
+      dispatch(receiveDataAction(todos, goals))
+    })
+  }
+}
 
 // App Code
 
@@ -195,28 +230,18 @@ const loading =(state= true, action)=>{
     class Todos extends React.Component {
       addItem=(e)=>{
         e.preventDefault();
-
-        return API.saveTodo(this.input.value)
-          .then(todo => {
-            this.props.store.dispatch(addTodoAction(todo))
-            this.input.value =''
-          }).catch(err=> {
-            console.log(err);
-          })
+        this.props.store.dispatch(handleAddTodo(
+          this.input.value,
+          ()=> this.input.value =''
+        ))
       }
 
       removeItem = (todo) => {
         this.props.store.dispatch(handleDeleteTodo(todo))
       }
+
       toggleTodo =(id)=>{
-        this.props.store.dispatch(toggleTodoAction(id));
-        return API.saveTodoToggle(id)
-          .catch(()=>{
-            this.props.store.dispatch(toggleTodoAction(id));
-            return alert("Error Occured and refused to toggle")
-          })
-
-
+        this.props.store.dispatch(handleToggleTodo(id));
       }
       render(){
         return(
@@ -258,13 +283,9 @@ const loading =(state= true, action)=>{
     class App extends React.Component {
       componentDidMount() {
         const { store } = this.props;
+
+        store.dispatch(handleInitialData())
         store.subscribe(()=> this.forceUpdate());
-        Promise.all([
-          API.fetchTodos(),
-          API.fetchGoals()
-        ]).then(([ todos, goals ]) => {
-          store.dispatch(receiveDataAction(todos, goals))
-        })
       }
 
       render() {
